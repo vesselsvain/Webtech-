@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="LunchCheck">
+<head>
+  <title>Lunch Check</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <style>
+    .message {
+      color: green;
+    }
+
+    .error-message {
+      color: red;
+    }
+  </style>
+</head>
+<body ng-controller="LunchCheckController">
+
+  <h1>Lunch Checker</h1>
+
+  <div>
+    <label for="lunchItems">List of lunch items (comma-separated):</label>
+    <input type="text" id="lunchItems" ng-model="lunchItems" placeholder="e.g., Sandwich, Salad, Fruit">
+    <button ng-click="checkLunch()">Check If Too Much</button>
+  </div>
+
+  <div class="message" ng-if="message === 'Enjoy!'">
+    {{ message }}
+  </div>
+
+  <div class="error-message" ng-if="message === 'Too much!' || message === 'Please enter data first'">
+    {{ message }}
+  </div>
+
+  <script>
+    angular.module('LunchCheck', [])
+      .controller('LunchCheckController', LunchCheckController);
+
+    LunchCheckController.$inject = ['$scope'];
+
+    function LunchCheckController($scope) {
+      $scope.checkLunch = function () {
+        if (!$scope.lunchItems || $scope.lunchItems.trim() === "") {
+          $scope.message = 'Please enter data first';
+        } else {
+          var items = $scope.lunchItems.split(',').map(item => item.trim()).filter(Boolean);
+
+          if (items.length <= 3) {
+            $scope.message = 'Enjoy!';
+          } else {
+            $scope.message = 'Too much!';
+          }
+        }
+      };
+    }
+  </script>
+
+</body>
+</html>
